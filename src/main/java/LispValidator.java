@@ -1,6 +1,6 @@
 public class LispValidator {
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         String testVal = "(defun fibonacci (N)\n" +
                 "  \"Compute the N'th Fibonacci number.\"\n" +
                 "  (if (or (zerop N) (= N 1))\n" +

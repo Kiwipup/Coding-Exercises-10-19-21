@@ -1,8 +1,6 @@
 import com.opencsv.bean.*;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import sun.misc.ClassLoaderUtil;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -79,7 +77,7 @@ public class ProviderSorter {
         });
     }
 
-    private static Map<String,List<Provider>> groupByInsuranceCompany(List<Provider> providerList) {
+    private static Map<String, List<Provider>> groupByInsuranceCompany(List<Provider> providerList) {
         Map<String, List<Provider>> grouped = new HashMap<>();
         for (Provider p : providerList) {
             List<Provider> insCompanyProviders = grouped.computeIfAbsent(p.getInsuranceCompany(), (key) -> new ArrayList<>());
