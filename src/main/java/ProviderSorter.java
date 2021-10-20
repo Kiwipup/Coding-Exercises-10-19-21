@@ -16,19 +16,19 @@ public class ProviderSorter {
         sort(providerList, outputFolder);
     }
 
-    private static List<Provider> readProvidersFromCsv(String providerCsv) throws FileNotFoundException {
+    private static List<Provider> readProvidersFromCsv(String providerCsv) throws IOException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream(providerCsv);
-        InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
-        Reader reader = new BufferedReader(streamReader);
-        CsvToBean<Provider> csvReader = new CsvToBeanBuilder(reader)
-                .withType(Provider.class)
-                .withSeparator(',')
-                .withIgnoreLeadingWhiteSpace(true)
-                .withIgnoreEmptyLine(true)
-                .build();
-
-        return csvReader.parse();
+        try(InputStream is = classloader.getResourceAsStream(providerCsv)) {
+            InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
+            Reader reader = new BufferedReader(streamReader);
+            CsvToBean<Provider> csvReader = new CsvToBeanBuilder(reader)
+                    .withType(Provider.class)
+                    .withSeparator(',')
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreEmptyLine(true)
+                    .build();
+            return csvReader.parse();
+        }
     }
 
     private static void sort(List<Provider> providerList, Path outputFolder) throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException, IOException {
@@ -47,12 +47,12 @@ public class ProviderSorter {
     }
 
     private static void writeToCsv(List<Provider> providers, Path path) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
-        FileWriter writer = new FileWriter(path.toFile());
-        StatefulBeanToCsvBuilder<Provider> builder = new StatefulBeanToCsvBuilder<>(writer);
-        StatefulBeanToCsv<Provider> csvWriter = builder
-                .build();
-        csvWriter.write(providers);
-        writer.close();
+        try(FileWriter writer = new FileWriter(path.toFile())) {
+            StatefulBeanToCsvBuilder<Provider> builder = new StatefulBeanToCsvBuilder<>(writer);
+            StatefulBeanToCsv<Provider> csvWriter = builder
+                    .build();
+            csvWriter.write(providers);
+        }
     }
 
     private static void removeDuplicates(Map<String, List<Provider>> grouped) {
