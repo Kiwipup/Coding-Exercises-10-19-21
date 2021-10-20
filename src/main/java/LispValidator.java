@@ -9,7 +9,8 @@ public class LispValidator {
         System.out.println(validateParentheses(testVal) ? "good" : "bad");
         System.out.println(validateParentheses("()()()(") ? "good" : "bad");
         System.out.println(validateParentheses("(v%^$#())") ? "good" : "bad");
-        System.out.println(validateParentheses("()()($%#@())()") ? "good" : "bad");
+        System.out.println(validateParentheses("()()($%#@())())") ? "good" : "bad");
+        System.out.println(validateParentheses(")(") ? "good" : "bad");
     }
 
     public static boolean validateParentheses(String lisp) {
@@ -22,11 +23,9 @@ public class LispValidator {
             } else if (c == ')') {
                 parenthesesCount--;
             }
+            if (parenthesesCount < 0)
+                return false;
         }
-        if (parenthesesCount == 0) {
-            return true;
-        }
-
-        return false;
+        return parenthesesCount == 0;
     }
 }
